@@ -8,15 +8,15 @@ This extension is inspired by [Gruntfuggly/closeunmodified](https://github.com/G
 \!\[feature X\]\(images/feature-x.png\)
 
 ## Installing
-You can install the latest version of the extension via the Visual Studio Marketplace [here]().
+You can install the latest version of the extension via the Visual Studio Marketplace [here](https://marketplace.visualstudio.com/items?itemName=Cyanhall.close-git-unmodified).
 
 Alternatively, open Visual Studio code, press `Ctrl/Cmd+P` and type:
 ```sh
-> ext install vscode-close-git-unmodified
+> ext install close-git-unmodified
 ```
 
 ## Operation
-Open the Command Palette (`Cmd/Ctrl` + `Shift` + `P`), and entry 'Close Git Unmodified'
+Open the Command Palette (`Cmd/Ctrl` + `Shift` + `P`), and entry `Close Git Unmodified`.
 
 ### 1.0.0
 Initial release.
