@@ -1,0 +1,42 @@
+{
+	"name": "vscode-close-git-unmodified",
+	"displayName": "vscode-close-git-unmodified",
+	"description": "A Visual Studio Code extension to close open editors which are not modified in git",
+  "version": "0.0.1",
+  "publisher": "JeOam",
+  "repository": "https://github.com/JeOam/vscode-close-git-unmodified",
+	"engines": {
+		"vscode": "^1.45.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:vscode-close-git-unmodified.closeGitUnmodified"
+	],
+	"main": "./extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "vscode-close-git-unmodified.closeGitUnmodified",
+				"title": "Close Git Unmodified"
+			}
+		]
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"pretest": "npm run lint",
+		"test": "node ./test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.45.0",
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^7.0.2",
+		"@types/node": "^13.11.0",
+		"eslint": "^6.8.0",
+		"glob": "^7.1.6",
+		"mocha": "^7.1.2",
+		"typescript": "^3.8.3",
+		"vscode-test": "^1.3.0"
+	}
+}
