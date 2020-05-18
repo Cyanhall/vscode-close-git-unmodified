@@ -22,4 +22,4 @@ Open the Command Palette (`Cmd/Ctrl` + `Shift` + `P`), and entry `Close Git Unmo
 Initial release.
 
 ## Source Code
-The source code is available on GitHub [here](https://github.com/JeOam/vscode-close-git-unmodified).
+The source code is available on GitHub [here](https://github.com/Cyanhall/vscode-close-git-unmodified).

@@ -4,7 +4,7 @@
 	"description": "A Visual Studio Code extension that closes editors which are not modified in Git.",
   "version": "1.0.0",
   "publisher": "Cyanhall",
-  "repository": "https://github.com/JeOam/vscode-close-git-unmodified",
+  "repository": "https://github.com/Cyanhall/vscode-close-git-unmodified",
 	"engines": {
 		"vscode": "^1.45.0"
 	},
