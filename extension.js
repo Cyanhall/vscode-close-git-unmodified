@@ -24,109 +24,61 @@ function activate(context) {
     if (!vscode.window.activeTextEditor) {
       return false;
     }
-    const allPaths = new Set();
-    const keepPaths = new Set();
-    let closePaths = new Set();
-    let closedPaths = new Set();
-    let shouldKill = false;
-    let shouldStop = false;
-    console.log('........Listener begin........')
-    const listener = vscode.window.onDidChangeActiveTextEditor(editor => {
-      if (!editor) {
-        vscode.commands.executeCommand('workbench.action.nextEditor');
-        return
-      }
-      if (shouldKill) {
-        killEditor(editor);
+    let lastEditorPath
+    let currentEditorPath
+    let currentEditor
+    const checkEditor = () => {
+      let shouldClose = true
+      if (currentEditor.document.isDirty) {
+        shouldClose = false
       } else {
-        checkEditor(editor);
-      }
-    })
-
-    let stopListen = () => {
-      if (listener) {
-        console.log(`All: ${allPaths.size}, keep: ${keepPaths.size}, close: ${closePaths.size}, closed: ${closedPaths.size}`);
-        console.log('........Listener closed........');
-        listener.dispose();
-      }
-    }
-    let listenTimer;
-    const killEditor = editor => {
-      let currentPath = editor.document.uri.path
-      if (!closePaths.size) {
-        if (shouldStop) {
-          stopListen()
-          return
-        } else {
-          shouldStop = true
-          vscode.commands.executeCommand('workbench.action.nextEditor');
-        }
-      } else {
-        vscode.commands.executeCommand('workbench.action.nextEditor');
-        clearTimeout(listenTimer);
-        listenTimer = setTimeout(() => {
-          stopListen()
-        }, 1000);
-      }
-      if (closePaths.has(currentPath)) {
-        vscode.commands.executeCommand('workbench.action.closeActiveEditor').then(() => {
-          closePaths.delete(currentPath);
-          closedPaths.add(currentPath);
-          vscode.commands.executeCommand('workbench.action.nextEditor');
-        });
-      }
-    }
-    const checkEditor = editor => {
-      let currentPath = editor.document.uri.path
-      if (!allPaths.has(currentPath)) {
-        if (editor.document.isDirty) {
-          keepPaths.add(currentPath)
-        } else {
-          const file = vscode.Uri.parse('file://' + currentPath);
-          const filepath = file.fsPath;
-          const folder = path.dirname(filepath);
-          const name = path.basename(filepath);
-          try
-          {
-            const status = exec( 'git status -z ' + name, {cwd: folder});
-            if(!status || !status.toString().length)
-            {
-              // Git unmodified
-            } else {
-              // Git modified
-              console.log('Keep opened: ' + currentPath);
-              keepPaths.add(currentPath)
-            }
+        const file = vscode.Uri.parse('file://' + currentEditorPath);
+        const filepath = file.fsPath;
+        const folder = path.dirname(filepath);
+        const name = path.basename(filepath);
+        try {
+          const status = exec( 'git status -z ' + name, {cwd: folder});
+          if(!status || !status.toString().length) {
+            shouldClose = true
+          } else {
+            shouldClose = false
           }
-          catch(e) {
-            console.log('Error:' + e);
-            stopListen();
-          };
-        }
-        allPaths.add(currentPath);
-        vscode.commands.executeCommand('workbench.action.nextEditor').then(() => {
-          setTimeout(() => {
-            if (allPaths.size === 1 && !shouldKill) {
-              if (!keepPaths.size) {
-                vscode.commands.executeCommand('workbench.action.closeActiveEditor')
-              }
-              console.log('Only One File Opened');
-              stopListen();
-            }
-          }, 1000);
+        } catch(e) {
+          shouldClose = false
+        };
+      }
+      if (shouldClose) {
+        vscode.commands.executeCommand('workbench.action.closeActiveEditor').then(() => {
+          if (currentEditorPath !== lastEditorPath) {
+            vscode.commands.executeCommand('workbench.action.nextEditor').then(() => {
+              currentEditor = vscode.window.activeTextEditor
+              currentEditorPath = vscode.window.activeTextEditor.document.uri.path
+              checkEditor()
+            })
+          }
         })
       } else {
-        closePaths = new Set(Array.from(allPaths).filter(currentPath => !keepPaths.has(currentPath)))
-        shouldKill = true
-        vscode.commands.executeCommand('workbench.action.nextEditor');
+        if (currentEditorPath !== lastEditorPath) {
+          vscode.commands.executeCommand('workbench.action.nextEditor').then(() => {
+            currentEditor = vscode.window.activeTextEditor
+            currentEditorPath = vscode.window.activeTextEditor.document.uri.path
+            checkEditor()
+          })
+        }
       }
     }
-    if (vscode.window.activeTextEditor) {
-      checkEditor(vscode.window.activeTextEditor);
-    } else {
-      listener.dispose();
-      console.log('........Listener closed........')
-    }
+    
+    vscode.commands.executeCommand('workbench.action.lastEditorInGroup').then(result => {
+      if (!vscode.window.activeTextEditor) {
+        return;
+      }
+      lastEditorPath = vscode.window.activeTextEditor.document.uri.path
+      vscode.commands.executeCommand('workbench.action.firstEditorInGroup').then(result => {
+        currentEditor = vscode.window.activeTextEditor
+        currentEditorPath = vscode.window.activeTextEditor.document.uri.path
+        checkEditor()
+      })
+    })
 	});
 
 	context.subscriptions.push(disposable);

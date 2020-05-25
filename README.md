@@ -1,8 +1,8 @@
-# vscode-close-git-unmodified
+# vscode-close-git-unmodified <img src="https://vsmarketplacebadge.apphb.com/installs-short/Cyanhall.close-git-unmodified.svg">
 A Visual Studio Code extension that closes editors which are not modified in Git. Created by [cyanhall.com](https://www.cyanhall.com/)
 
 ## Acknowledgement
-This extension is inspired by [Gruntfuggly/closeunmodified](https://github.com/Gruntfuggly/closeunmodified)
+This extension is inspired by [Gruntfuggly/closeunmodified](https://github.com/Gruntfuggly/closeunmodified), and have better implementation.
 
 ## Screenshot
 ![feature X](demo.gif)
@@ -17,6 +17,9 @@ Alternatively, open Visual Studio code, press `Ctrl/Cmd+P` and type:
 
 ## Operation
 Open the Command Palette (`Cmd/Ctrl` + `Shift` + `P`), and entry `Close Git Unmodified`.
+
+### 1.1.0
+Refator the editor inspect strategy. Run faster now.
 
 ### 1.0.0
 Initial release.
